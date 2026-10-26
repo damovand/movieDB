@@ -1,11 +1,12 @@
 from pprint import pprint
+from flask import jsonify
 import requests
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+# load_dotenv()
 
-api_key = '3dfc9c89'
+# api_key = '3dfc9c89'
 
 # Function to test OMDb API response
 def test_omdb_api(api_key, movie_title):
@@ -24,35 +25,54 @@ def test_omdb_api(api_key, movie_title):
 
         # Check HTTP status
         if response.status_code != 200:
-            print(f"❌ HTTP Error: {response.status_code}")
-            return False
+            #print(f"❌ HTTP Error: {response.status_code}")
+            #return False
+            result = {"Message": "❌ HTTP Error", "Status Code": response.status_code}
+            return jsonify(result)
 
         # Parse JSON
         data = response.json()
 
         # Check if API returned an error
         if data.get("Response") == "False":
-            print(f"❌ API Error: {data.get('Error')}")
-            return False
+            #print(f"❌ API Error: {data.get('Error')}")
+            #return False
+            result = {"Message": "❌ API Error", "Error": data.get('Error')}
+            return jsonify(result)
 
         # Validate expected fields
         expected_fields = ["Title", "Year", "Genre", "Director", "Actors", "imdbRating"]
         missing_fields = [field for field in expected_fields if field not in data]
 
         if missing_fields:
-            print(f"❌ Missing fields in response: {missing_fields}")
-            return False
+            #print(f"❌ Missing fields in response: {missing_fields}")
+            result = {"Message": "❌ Missing fields in response", "Missing Fields": missing_fields}
+            return jsonify(result)
 
-        # Print validated data
-        print("✅ API call successful and data validated:")
-        for field in expected_fields:
-            print(f"{field}: {data[field]}")
+        #Print validated data
+        #print("✅ API call successful and data validated:")
 
-        return True
+        #for field in expected_fields:
+        #   (f"{field}: {data[field]}")
+        # Create structured response
+        response = {
+            "status": "✅ API call successful and data validated",
+            data["Title"]: {
+                "Year": data["Year"],
+                "Genre": data["Genre"],
+                "Director": data["Director"],
+                "Actors": data["Actors"],
+                "imdbRating": data["imdbRating"]
+            }   
+        }
+
+        return jsonify(response)
+        #return True
 
     except requests.exceptions.RequestException as e:
-        print(f"❌ Request failed: {e}")
-        return False
+        result = {"Message": "❌ Request failed", "Error": str(e)}
+        #print(f"❌ Request failed: {e}")
+        return jsonify(result)
 
 
 if __name__ == "__main__":
