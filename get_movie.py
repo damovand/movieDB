@@ -1,4 +1,3 @@
-from omdbapi.movie_search import GetMovie
 from pprint import pprint
 import requests
 from dotenv import load_dotenv
