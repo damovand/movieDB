@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Description</title>
+    <link href="{{ url_for('static', filename='styles/style.css') }}" rel="stylesheet" />
+</head>
+<body>
+    <h1>Get Movie Description </h1>
+    <form action="/getMovie">
+        <input type="text" name="title" placeholder="Enter a Movie Title" />
+        <button type="submit">Submit</button>
+    </form>  
+</body>
+</html>
